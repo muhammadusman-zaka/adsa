@@ -125,7 +125,7 @@ std::string karatsubaMultiplication(std::string &firstNum, std::string &secondNu
   std::string p2 = karatsubaMultiplication(a1, b1, base);
 
   // Using the 3 products, getting the 3 terms of the final equation
-  std::string middleTermSum = schoolMethodAddition(b1, b0, base);
+  std::string middleTermSum = schoolMethodAddition(p2, p0, base);
   std::string middleTerm = subtraction(p1, middleTermSum, base);
 
   std::string firstTerm = p2 + std::string(2 * k, '0');
