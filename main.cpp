@@ -149,6 +149,6 @@ int main() {
   std::cin >> num1 >> num2 >> base;
 
   // We can then output the results
-  std::cout << schoolMethodAddition(num1, num2, base) << " " << "0" << " 0 ";
+  std::cout << schoolMethodAddition(num1, num2, base) << " " << karatsubaMultiplication(num1, num2, base) << " 0 ";
   return 0;
 }
