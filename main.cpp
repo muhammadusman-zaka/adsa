@@ -40,7 +40,7 @@ int getBalance(Node* n){
 }
 
 Node* rotateRight(Node* b){
-    if (!b || !b->left) return b;  // prevent segfault
+    if (!b || !b->left) return b;
 
     Node* a = b->left;
     b->left = a->right;
@@ -53,7 +53,7 @@ Node* rotateRight(Node* b){
 
 
 Node* rotateLeft(Node* a){
-    if (!a || !a->right) return a;  // prevent segfault
+    if (!a || !a->right) return a;
 
     Node* b = a->right;
     a->right = b->left;
@@ -112,7 +112,6 @@ Node* insert(Node* root, int val){
     }
 
     else{
-        // Skip insertion of duplicates
         return root;
     }
     
@@ -123,12 +122,15 @@ Node* insert(Node* root, int val){
 // Utility Functions for AVL Deletion 
 Node* findMax(Node* node) {
     while (node->right != nullptr)
+    {
         node = node->right;
+    }
     return node;
 }
 
 Node* removeMax(Node* node) {
-    if (node->right == nullptr) {
+    if (node->right == nullptr) 
+    {
         Node* leftChild = node->left;
         delete node;
         return leftChild;
@@ -145,21 +147,33 @@ Node* remove(Node* root, int val){
         return nullptr;
 
     if (val < root->val)
+    {
         root->left = remove(root->left, val);
+    }
+    
     else if (val > root->val)
+    {
         root->right = remove(root->right, val);
-    else {
-        if (root->left == nullptr) {
+    }
+    
+    else 
+    {
+        if (root->left == nullptr) 
+        {
             Node* rightChild = root->right;
             delete root;
             return rightChild;
         }
-        else if (root->right == nullptr) {
+        
+        else if (root->right == nullptr) 
+        {
             Node* leftChild = root->left;
             delete root;
             return leftChild;
         }
-        else {
+        
+        else 
+        {
             Node* maxNode = findMax(root->left);
             root->val = maxNode->val;
             root->left = removeMax(root->left);
