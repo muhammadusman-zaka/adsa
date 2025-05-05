@@ -110,40 +110,34 @@ Node* insert(Node* root, int val){
     {
         root->right = insert(root->right, val);
     }
+
+    else{
+        // Skip insertion of duplicates
+        return root;
+    }
     
     return balance(root);
     
 }
 
 // Utility Functions for AVL Deletion 
-Node* findMin(Node* node){
-    if (node == nullptr)
-    {
-        return nullptr;
-    }
-
-    // To find the smallest element, we need to traverse
-    // to the leftmost subtree
-    while (node->left != nullptr)
-    {
-        node = node->left;
-    }
-    
+Node* findMax(Node* node) {
+    while (node->right != nullptr)
+        node = node->right;
     return node;
-    
 }
 
-Node* removeMin(Node* node){
-    if (node->left == nullptr)
-    {
-        Node* rightChild = node->right;
+Node* removeMax(Node* node) {
+    if (node->right == nullptr) {
+        Node* leftChild = node->left;
         delete node;
-        return rightChild;
+        return leftChild;
     }
-    
-    node->left = removeMin(node->left);
+
+    node->right = removeMax(node->right);
     return balance(node);
 }
+
 
 // AVL Deletion 
 Node* remove(Node* root, int val){
@@ -166,12 +160,10 @@ Node* remove(Node* root, int val){
             return leftChild;
         }
         else {
-            Node* minNode = findMin(root->right);
-            Node* newNode = new Node(minNode->val);
-            newNode->right = remove(root->right, minNode->val);  // Balanced delete
-            newNode->left = root->left;
-            delete root;
-            return balance(newNode);
+            Node* maxNode = findMax(root->left);
+            root->val = maxNode->val;
+            root->left = removeMax(root->left);
+
         }
     }
 
