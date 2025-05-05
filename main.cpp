@@ -40,27 +40,28 @@ int getBalance(Node* n){
 }
 
 Node* rotateRight(Node* b){
-    Node* a = b->left;
-    Node* c = b->right;
+    if (!b || !b->left) return b;  // prevent segfault
 
+    Node* a = b->left;
+    b->left = a->right;
     a->right = b;
-    b->left = c; 
+
     updateHeight(b);
     updateHeight(a);
     return a;
-
 }
 
-Node* rotateLeft(Node* a){
-    Node* b = a->right;
-    Node* c = b->left;
 
+Node* rotateLeft(Node* a){
+    if (!a || !a->right) return a;  // prevent segfault
+
+    Node* b = a->right;
+    a->right = b->left;
     b->left = a;
-    a->right = c; 
+
     updateHeight(a);
     updateHeight(b);
     return b;
-
 }
 
 // Balancing is done as per explained in the lectures
@@ -135,7 +136,9 @@ Node* findMin(Node* node){
 Node* removeMin(Node* node){
     if (node->left == nullptr)
     {
-        return node->right;
+        Node* rightChild = node->right;
+        delete node;
+        return rightChild;
     }
     
     node->left = removeMin(node->left);
@@ -144,49 +147,34 @@ Node* removeMin(Node* node){
 
 // AVL Deletion 
 Node* remove(Node* root, int val){
-    // Base Case: If the value is not found 
     if (root == nullptr)
-    {
         return nullptr;
-    }
-    
-    // Then we delete as usual by traversing either the 
-    // left subtree or right subtree
+
     if (val < root->val)
-    {
         root->left = remove(root->left, val);
-    }
-    
     else if (val > root->val)
-    {
         root->right = remove(root->right, val);
-    }
-
-    // The node we want to delete is the current node
-    else
-    {
-        Node* left = root->left;
-        Node* right = root->right;
-        
-        delete root;
-        
-        // If there is only left child 
-        if (right == nullptr)
-        {
-            return left;
+    else {
+        if (root->left == nullptr) {
+            Node* rightChild = root->right;
+            delete root;
+            return rightChild;
         }
-        
-        // Otherwise we can replace it with the inorder successor
-        // Which is the the minimum in the right subtree
-        Node* min = findMin(right);
-        min->right = removeMin(right);
-        min->left = left;
-
-        return balance(min); // rebalance from the current subtree
+        else if (root->right == nullptr) {
+            Node* leftChild = root->left;
+            delete root;
+            return leftChild;
+        }
+        else {
+            Node* minNode = findMin(root->right);
+            Node* newNode = new Node(minNode->val);
+            newNode->right = remove(root->right, minNode->val);  // Balanced delete
+            newNode->left = root->left;
+            delete root;
+            return balance(newNode);
+        }
     }
 
-    // There may be more than one imbalance after deletion
-    // So we can rebalance on the way up
     return balance(root);
     
 }
